@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Karanganyar Urban</title>
+
+    <!-- External CSS Links -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-measure/3.3.1/leaflet-measure.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="plugin/leaflet-search-master/dist/leaflet-search.min.css">
+    <link rel="stylesheet"
+        href="plugin/Leaflet.defaultextent-master/Leaflet.defaultextent-master/dist/leaflet.defaultextent.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-dark text-white">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-white">
+        <div class="container-fluid">
+
+            <a class="navbar-brand" href="#">K a r a n g <span> a n y a r</span>
+                <br>
+                <span class="urban-flow">Urban Flow</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+
+                    <!-- Link Home -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="index.html">
+                            <i class="fa-solid fa-house"></i> Home
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="maps.html">
+                            <i class="fa-solid fa-map-location-dot"></i> Maps
+                        </a>
+                    </li>
+
+
+                    <!-- Link Profil Kecamatan -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="profil.html">
+                            <i class="fa-solid fa-city"></i> Profil
+                        </a>
+                    </li>
+
+                    <!-- Link to data.html -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="data.html">
+                            <i class="fa-solid fa-database"></i> Data
+                        </a>
+                    </li>
+
+                    <!-- Link More Info -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="https://gishub.karanganyarkab.go.id/" target="_blank">
+                            <i class="fa-solid fa-layer-group"></i> More Info!</a>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- Header Kedua Dibawah Navbar -->
+    <div class="secondary-header mt-4">
+        <div class="container mt-4">
+            <div class="d-flex justify-content-center">
+                <input type="text" id="searchInput" class="form-control w-50" placeholder="Search for Profile..."
+                    onkeyup="searchProfile()">
+                <button class="btn btn-primary ms-2" onclick="searchProfile()">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informasi Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-white">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">Information</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    This is some information about the urban flow in Karanganyar
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background-color: #2a2a2a; color: white; padding: 20px 0; text-align: center;">
+        <p>© 2024 Created with care by Aga.Mlna |
+            <a href="#" onclick="openFeedbackModal()" style="color: #ff8800; text-decoration: none;">Feedback</a>
+        </p>
+    </footer>
+
+    <!-- FeedBack -->
+    <div id="feedbackModal"
+        style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); transition: opacity 0.3s;">
+        <div
+            style="background-color: #2a2a2a; margin: 10% auto; padding: 20px; border-radius: 5px; width: 80%; max-width: 400px;">
+            <h2 style="color: #ff8800; margin-bottom: 20px;">Contact Us</h2>
+            <p style="margin-bottom: 30px;">Have questions or feedback? We'd love to hear from you!</p>
+            <form id="feedbackForm">
+                <div style="margin-bottom: 15px;">
+                    <input type="text" id="name" name="name" placeholder="Your Name" required
+                        style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 5px; background-color: #2a2a2a; color: white;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <input type="email" id="email" name="email" placeholder="Your Email" required
+                        style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 5px; background-color: #2a2a2a; color: white;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <textarea id="feedback" name="feedback" placeholder="Your Message" required
+                        style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 5px; background-color: #2a2a2a; color: white; height: 100px;"></textarea>
+                </div>
+                <button type="submit"
+                    style="padding: 10px 20px; background-color: #ff8800; color: white; border: none; border-radius: 5px; cursor: pointer;">Send
+                    Message</button>
+                <button type="button" onclick="closeFeedbackModal()"
+                    style="padding: 10px 20px; background-color: #444; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+            </form>
+            <div id="feedbackStatus" style="color: white; margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <!--Feature Modal -->
+    <div class="modal fade" id="featureModal" tabindex="-1" aria-labelledby="featureModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="featureModalTitle"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body" id="featureModalBody"></div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="featureModal" tabindex="-1" aria-labelledby="featureModalTitle" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="featureModalTitle">Informasi Fitur</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div id="featureModalBody"></div>
+                    <canvas id="featureChart" width="400" height="200"></canvas>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Profil Kabupaten Karanganyar</h1>
+        <div class="row align-items-center mb-4">
+            <div class="col-md-4">
+                <img src="images/peta_kra.png" class="img-fluid maps" alt="Gambar Kabupaten Karanganyar">
+            </div>
+            <div class="col-md-8">
+                <p style="text-align: justify;">
+                    Kabupaten Karanganyar adalah sebuah wilayah kabupaten yang terletak di Provinsi Jawa
+                    Tengah,Indonesia. Ibu kotanya adalah Kecamatan Karanganyar Kota. Sekitar 14 km sebelah timur Kota
+                    Surakarta. Kabupaten ini berbatasandengan Kabupaten Sragen di utara, Magetan, Ngawi di timur,
+                    Wonogiri di selatan, serta Boyolali, Kota Surakarta, dan Kabupaten Sukoharjo di barat. Kabupaten
+                    Karanganyar memiliki sebuah kecamatan eksklave yang terletak di antara Kabupaten Boyolali,
+                    Sukoharjo, dan Kota Surakarta yaitu Kecamatan Colomadu. Jumlah penduduk Karanganyar pada akhir tahun
+                    2021 mencapai 931.963 jiwa</p>
+                <h5>Data Umum:</h5>
+                <ul>
+                    <li>Luas wilayah: 773,79 km2</li>
+                    <li>Populasi total: 955,116 jiwa</li>
+                    <li>Kepadatan: 1,200/km2 </li>
+                </ul>
+                <h5>Data Populasi:</h5>
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th>Jenis Kelamin</th>
+                            <th>Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Laki-Laki</td>
+                            <td>476,253</td>
+                        </tr>
+                        <tr>
+                            <td>Perempuan</td>
+                            <td>478,863</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <hr class="custom-divider">
+
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Profil Kecamatan</h2>
+        <div class="accordion" id="accordionKecamatan">
+
+            <!-- Kecamatan Colomadu -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingColomadu">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseColomadu" aria-expanded="true" aria-controls="collapseColomadu">
+                        Kecamatan Colomadu
+                    </button>
+                </h2>
+                <div id="collapseColomadu" class="accordion-collapse collapse show" aria-labelledby="headingColomadu">
+                    <div class="accordion-body">
+                        <img src="images/peta colomadu.png" class="img-fluid" alt="Peta Kecamatan Colomadu">
+                        <p style="text-align: justify;">
+                            Colomadu merupakan nama suatu kecamatan di Kabupaten Karanganyar, Jawa Tengah yang kini
+                            menjelma bagaikan kota metropolitan. Letak kecamatan ini secara geografis terpisah dari
+                            kecamatan-kecamatan lainnya (eksklave). Kecamatan ini dikenal sebagai daerah yang berkembang
+                            pesat dengan kombinasi antara kawasan permukiman, sentra bisnis, dan fasilitas umum modern.
+                            Colomadu memiliki beberapa destinasi menarik, salah satunya De Tjolomadoe, bekas pabrik gula
+                            yang kini bertransformasi menjadi tempat wisata budaya dan pameran seni. Selain itu,
+                            kecamatan ini juga didukung oleh infrastruktur yang baik, seperti akses jalan raya utama dan
+                            dekat dengan Bandara Internasional Adi Soemarmo, menjadikannya salah satu kawasan potensial
+                            untuk pertumbuhan ekonomi di Kabupaten Karanganyar.
+                        </p>
+
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 15,64 km²</li>
+                            <li>Populasi total: 68.663
+                                jiwa</li>
+                            <li>Kepadatan: 4.800 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>33.788
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>34.875
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Gondangrejo -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingGondangrejo">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseGondangrejo" aria-expanded="false" aria-controls="collapseGondangrejo">
+                        Kecamatan Gondangrejo
+                    </button>
+                </h2>
+                <div id="collapseGondangrejo" class="accordion-collapse collapse" aria-labelledby="headingGondangrejo">
+                    <div class="accordion-body">
+                        <img src="images/peta gondangrejo.png" class="img-fluid" alt="Peta Kecamatan Gondangrejo">
+                        <p style="text-align: justify;">
+                            Gondangrejo adalah sebuah nama kecamatan di Kabupaten Karanganyar, Provinsi Jawa Tengah.
+                            Terletak di bagian barat Kabupaten Karanganyar, wilayah ini berbatasan langsung dengan Kota
+                            Surakarta, menjadikannya strategis sebagai daerah penyangga perkotaan. Gondangrejo dikenal
+                            dengan lahan pertaniannya yang subur, di mana masyarakatnya banyak bergantung pada sektor
+                            pertanian sebagai mata pencaharian utama. Selain itu, kecamatan ini juga memiliki beberapa
+                            sentra industri kecil dan kerajinan yang berkontribusi pada perekonomian lokal. Keberadaan
+                            berbagai tempat ibadah, sekolah, dan fasilitas umum lainnya mendukung kehidupan masyarakat
+                            Gondangrejo yang beragam dan harmonis. Dengan perkembangan infrastruktur yang terus
+                            ditingkatkan, Gondangrejo memiliki potensi besar untuk menjadi kawasan yang semakin maju dan
+                            dinamis di masa mendatang.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 56,8 km²</li>
+                            <li>Populasi total: 84.342
+                                jiwa</li>
+                            <li>Kepadatan: 1.061 per km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>42.331
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>42.011
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Jaten -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingJaten">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseJaten" aria-expanded="false" aria-controls="collapseJaten">
+                        Kecamatan Jaten
+                    </button>
+                </h2>
+                <div id="collapseJaten" class="accordion-collapse collapse" aria-labelledby="headingJaten">
+                    <div class="accordion-body">
+                        <img src="images/peta jaten.png" class="img-fluid" alt="Peta Kecamatan Jaten">
+                        <p style="text-align: justify;">
+                            Jaten (sering disalahartikan sebagai Palur) adalah sebuah kecamatan di Kabupaten
+                            Karanganyar, Jawa Tengah. Berbatasan langsung dengan kabupaten lain, terutama Kota
+                            Surakarta, membuat Kecamatan Jaten lebih diminati dan dipilih sebagai tempat bermukim.
+                            Selain itu Kecamatan Jaten juga dekat dengan pusat Kabupaten Karanganyar, dilalui jalur
+                            utama provinsi dan jalur utama kabupaten. Kecamatan Jaten termasuk pusat kegiatan lokal dan
+                            kawasan strategis kota dengan tingkat pertumbuhan ekonomi berpotensi tinggi serta kawasan
+                            peruntukan industri besar.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 25,55 km²</li>
+                            <li>Populasi total: 82.012
+                                jiwa</li>
+                            <li>Kepadatan: 2.481 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>40.652
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>41.360
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Jatipuro -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingJatipuro">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseJatipuro" aria-expanded="false" aria-controls="collapseJatipuro">
+                        Kecamatan Jatipuro
+                    </button>
+                </h2>
+                <div id="collapseJatipuro" class="accordion-collapse collapse" aria-labelledby="headingJatipuro">
+                    <div class="accordion-body">
+                        <img src="images/peta Jatipuro.png" class="img-fluid" alt="Peta Kecamatan Jatipuro">
+                        <p style="text-align: justify;">
+                            Jatipuro adalah sebuah kecamatan di Kabupaten Karanganyar, Jawa Tengah. Secara geografis
+                            terletak di wilayah paling selatan Kabupaten Karanganyar. Wilayah ini dikelilingi oleh
+                            pegunungan dan perbukitan yang hijau, menciptakan pemandangan yang sangat mempesona. Selain
+                            itu, Jatipuro juga terkenal dengan berbagai potensi pertanian, terutama tanaman sayuran dan
+                            buah-buahan yang subur berkat tanahnya yang subur dan iklim yang mendukung. Masyarakatnya
+                            mayoritas bekerja di sektor pertanian, namun sektor pariwisata juga mulai berkembang dengan
+                            adanya beberapa objek wisata alam yang menarik, seperti air terjun dan area pendakian.
+                            Kehidupan sosial di Jatipuro sangat kental dengan tradisi budaya Jawa yang masih dijaga oleh
+                            masyarakat setempat.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 40,36 km²</li>
+                            <li>Populasi total: 35.610
+                                jiwa</li>
+                            <li>Kepadatan: 950 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>17.994
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>17.616
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Jatiyoso -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingJatiyoso">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseJatiyoso" aria-expanded="false" aria-controls="collapseJatiyoso">
+                        Kecamatan Jatiyoso
+                    </button>
+                </h2>
+                <div id="collapseJatiyoso" class="accordion-collapse collapse" aria-labelledby="headingJatiyoso">
+                    <div class="accordion-body">
+                        <img src="images/peta jatiyoso.png" class="img-fluid" alt="Peta Kecamatan Jatiyoso">
+                        <p style="text-align: justify;">
+                            Jatiyoso adalah sebuah kecamatan di Kabupaten Karanganyar, Jawa Tengah. Dikenal dengan
+                            suasana yang asri dan udara yang sejuk, Jatiyoso menjadi destinasi yang menarik bagi
+                            wisatawan yang ingin menikmati pemandangan pegunungan serta potensi pertanian yang melimpah,
+                            seperti tanaman sayuran dan buah-buahan. Kecamatan ini juga memiliki potensi dalam
+                            pengembangan pariwisata, terutama di sektor ekowisata dan agrowisata. Dengan masyarakat yang
+                            ramah dan lingkungan yang masih alami, Jatiyoso menawarkan pengalaman yang menyegarkan bagi
+                            siapa saja yang berkunjung.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 67,16 km²</li>
+                            <li>Populasi total: 42.930
+                                jiwa</li>
+                            <li>Kepadatan: 577 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>21.584
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>21.346
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Jenawi -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingJenawi">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseJenawi" aria-expanded="false" aria-controls="collapseJenawi">
+                        Kecamatan Jenawi
+                    </button>
+                </h2>
+                <div id="collapseJenawi" class="accordion-collapse collapse" aria-labelledby="headingJenawi">
+                    <div class="accordion-body">
+                        <img src="images/peta jenawi.png" class="img-fluid" alt="Peta Kecamatan Jenawi">
+                        <p style="text-align: justify;">
+                            Jenawi adalah sebuah kecamatan di Kabupaten Karanganyar, Jawa Tengah. Kecamatan Jenawi
+                            berbatasan langsung dengan Kecamatan Sambirejo,
+                            Sragen di utara, Kecamatan Sine, Ngawi di timur, Kecamatan Karangpandan di selatan,
+                            Lecamatan Kerjo di barat. Terdapat situs peninggalan majapahit di kecamatan ini yaitu candi
+                            cetho dan candi kethek. Transportasi di Kecamatan Jenawi tidak ada untuk arah dari Kecamatan
+                            Karangnyar, tetapi dari
+                            Sragen terdapat minibus.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 56,08 km²</li>
+                            <li>Populasi total: 28.304
+                                jiwa</li>
+                            <li>Kepadatan: 471 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>14.158
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>14.146
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Jumapolo -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingJumapolo">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseJumapolo" aria-expanded="false" aria-controls="collapseJumapolo">
+                        Kecamatan Jumapolo
+                    </button>
+                </h2>
+                <div id="collapseJumapolo" class="accordion-collapse collapse" aria-labelledby="headingJumapolo">
+                    <div class="accordion-body">
+                        <img src="images/peta jumapolo.png" class="img-fluid" alt="Peta Kecamatan Jumapolo">
+                        <p style="text-align: justify;">
+                            Jumapolo adalah sebuah kecamatan di Kabupaten Karanganyar, Jawa
+                            Tengah.Kecamatan ini dikenal dengan pemandangan alam yang indah, dengan sebagian besar
+                            wilayahnya berupa pegunungan dan perbukitan yang hijau, serta udara yang sejuk. Jumapolo
+                            juga memiliki potensi pertanian yang cukup baik, dengan tanaman utama seperti padi, jagung,
+                            dan sayuran yang tumbuh subur di daerah ini. Selain itu, Jumapolo juga memiliki beragam
+                            budaya lokal yang kaya, yang menjadi daya tarik tersendiri bagi wisatawan dan memberikan
+                            kontribusi terhadap perkembangan ekonomi lokal. Kecamatan ini terus berusaha meningkatkan
+                            infrastuktur dan kualitas hidup masyarakatnya, melalui program-program pembangunan yang
+                            berfokus pada pendidikan, kesehatan, serta sektor pertanian dan pariwisata.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 55,67 km²</li>
+                            <li>Populasi total: 45.006
+                                jiwa</li>
+                            <li>Kepadatan: 813 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>22.173
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>22.293
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Jumantono -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingJumantono">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseJumantono" aria-expanded="false" aria-controls="collapseJumantono">
+                        Kecamatan Jumantono
+                    </button>
+                </h2>
+                <div id="collapseJumantono" class="accordion-collapse collapse" aria-labelledby="headingJumantono">
+                    <div class="accordion-body">
+                        <img src="images/peta jumantono.png" class="img-fluid" alt="Peta Kecamatan Jumantono">
+                        <p style="text-align: justify;">
+                            Jumantono adalah sebuah kecamatan di Kabupaten Karanganyar, Jawa
+                            Tengah. Kecamatan ini dikenal dengan pemandangan alam yang indah, dikelilingi oleh
+                            perbukitan dan hamparan sawah yang subur, menjadikannya daerah yang kaya akan potensi
+                            pertanian. Jumantono juga memiliki berbagai objek wisata alam yang menarik, seperti air
+                            terjun dan hutan pinus, yang menjadi daya tarik bagi wisatawan. Selain itu, masyarakat
+                            Jumantono sangat erat dengan kegiatan pertanian, terutama tanaman padi, jagung, dan sayuran.
+                            Dengan akses yang baik ke pusat kota Karanganyar dan Solo, Jumantono menjadi daerah yang
+                            berkembang pesat dalam sektor ekonomi, pendidikan, dan infrastruktur.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 53,55 km²</li>
+                            <li>Populasi total: 51.875
+                                jiwa</li>
+                            <li>Kepadatan: 777 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>25.894
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>25.981
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Karanganyar -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingKaranganyar">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseKaranganyar" aria-expanded="false" aria-controls="collapseKaranganyar">
+                        Kecamatan Karanganyar
+                    </button>
+                </h2>
+                <div id="collapseKaranganyar" class="accordion-collapse collapse" aria-labelledby="headingKaranganyar">
+                    <div class="accordion-body">
+                        <img src="images/peta kra.png" class="img-fluid" alt="Peta Kecamatan Karanganyar">
+                        <p style="text-align: justify;">
+                            Karanganyar adalah ibu kota Kabupaten Karanganyar yang sekaligus
+                            menjadi pusat pemerintahan dan perekonomian dari Kabupaten Karanganyar. Karanganyar juga
+                            merupakan sebuah wilayah kecamatan yang terletak di Kabupaten Karanganyar, Provinsi Jawa
+                            Tengah, Indonesia.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 47,99 km²</li>
+                            <li>Populasi total: 88.719
+                                jiwa</li>
+                            <li>Kepadatan: 1.794 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>43.948
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>44.771
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Karangpandan -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingKarangpandan">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseKarangpandan" aria-expanded="false"
+                        aria-controls="collapseKarangpandan">
+                        Kecamatan Karangpandan
+                    </button>
+                </h2>
+                <div id="collapseKarangpandan" class="accordion-collapse collapse"
+                    aria-labelledby="headingKarangpandan">
+                    <div class="accordion-body">
+                        <img src="images/peta karangpandan.png" class="img-fluid" alt="Peta Kecamatan Karangpandan">
+                        <p style="text-align: justify;">
+                            Karangpandan adalah sebuah kecamatan di Kabupaten Karanganyar, Jawa
+                            Tengah. Kecamatan ini dikelilingi oleh pegunungan dan perbukitan, dengan pemandangan alam
+                            yang memukau, menjadikannya sebagai destinasi wisata yang menarik. Karangpandan juga dikenal
+                            dengan suasana pedesaan yang asri, di mana sebagian besar penduduknya bekerja di sektor
+                            pertanian, seperti perkebunan, pertanian pangan, dan hortikultura. Di samping itu,
+                            Karangpandan memiliki berbagai situs budaya dan sejarah, serta tradisi lokal yang masih
+                            dijaga oleh masyarakat setempat. Dengan adanya fasilitas dan infrastruktur yang terus
+                            berkembang, kecamatan ini semakin dikenal sebagai daerah yang menjanjikan dalam hal potensi
+                            ekonomi dan pariwisata di Kabupaten Karanganyar.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 34,11 km²</li>
+                            <li>Populasi total: 45.569
+                                jiwa</li>
+                            <li>Kepadatan: 1.166 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>22.629
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>22.940
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Kebakkramat -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingKebakkramat">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseKebakkramat" aria-expanded="false" aria-controls="collapseKebakkramat">
+                        Kecamatan Kebakkramat
+                    </button>
+                </h2>
+                <div id="collapseKebakkramat" class="accordion-collapse collapse" aria-labelledby="headingKebakkramat">
+                    <div class="accordion-body">
+                        <img src="images/peta kebakkramat.png" class="img-fluid" alt="Peta Kecamatan Kebakkramat">
+                        <p style="text-align: justify;">
+                            Kebakkramat adalah sebuah kecamatan di Kabupaten Karanganyar, Jawa Tengah. Kecamatan
+                            Kebakkramat menjadi salah satu pusat industri di Kabupaten Karanganyar. Sebagian besar
+                            wilayahnya terdiri dari area persawahan dan lahan pertanian yang subur, mendukung
+                            perekonomian masyarakat setempat yang berfokus pada sektor pertanian. Selain itu,
+                            Kebakkramat juga memiliki beberapa desa yang masih menjaga tradisi dan budaya lokal.
+                            Masyarakat di kecamatan ini umumnya ramah dan gotong royong dalam berbagai kegiatan sosial.
+                            Wilayah ini juga memiliki akses yang cukup baik ke kota-kota besar di sekitarnya, membuatnya
+                            menjadi tempat yang nyaman untuk tinggal, namun tetap dekat dengan berbagai fasilitas urban.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 36,46 km²</li>
+                            <li>Populasi total: 66.629
+                                jiwa</li>
+                            <li>Kepadatan: 1.484 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>33.057
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>33.572
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Kerjo -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingKerjo">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseKerjo" aria-expanded="false" aria-controls="collapseKerjo">
+                        Kecamatan Kerjo
+                    </button>
+                </h2>
+                <div id="collapseKerjo" class="accordion-collapse collapse" aria-labelledby="headingKerjo">
+                    <div class="accordion-body">
+                        <img src="images/peta kerjo.png" class="img-fluid" alt="Peta Kecamatan Kerjo">
+                        <p style="text-align: justify;">
+                            Kerjo adalah sebuah kecamatan di Kabupaten Karanganyar, Jawa Tengah. Kantor kecamatan Kerjo
+                            terletak di desa Sumberejo, kurang lebih 20 km arah timur laut
+                            Karanganyar. Dibagian utara kecamatan kerjo berbatasan dengan kecamatan Kedawung dan
+                            Kecamatan Sambirejo(Kabupaten Sragen), di bagian selatan berbatasan dengan Kecamatan
+                            Mojogedang, dibagian Timur berbatasan dengan kecamatan Jenawi, dan di bagian barat bebatasan
+                            dengan kecamatan Kedawung(sragen) dan kecamatan mojogedang. Penghasilan utama penduduk di
+                            kecamatan Kerjo adalah bertani, beternak dan berkebun. Di kecamatan Kerjo terdapat pabrik
+                            karet PTPN IX Kerjo Arum dan Batujamus. Sebagian besar, wilayah kecamatan Kerjo dipakai
+                            untuk perkebunan karet tersebut.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 46,82 km²</li>
+                            <li>Populasi total: 39.031
+                                jiwa</li>
+                            <li>Kepadatan: 770 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>19.452
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>19.579
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Matesih -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingMatesih">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseMatesih" aria-expanded="false" aria-controls="collapseMatesih">
+                        Kecamatan Matesih
+                    </button>
+                </h2>
+                <div id="collapseMatesih" class="accordion-collapse collapse" aria-labelledby="headingMatesih">
+                    <div class="accordion-body">
+                        <img src="images/peta matesih.png" class="img-fluid" alt="Peta Kecamatan Matesih">
+                        <p style="text-align: justify;">
+                            Matesih adalah sebuah kecamatan di wilayah Kabupaten Karanganyar, Jawa
+                            Tengah. Kecamatan ini terkenal karena di wilayah tersebut terdapat Astana Giri Bangun yaitu
+                            sebuah mausoleum bagi keluarga Presiden Republik Indonesia ke-2, Soeharto. Kompleks makam
+                            ini terletak di lereng Gunung Lawu pada ketinggian 660 meter di atas permukaan laut,
+                            tepatnya di Desa Girilayu, Kecamatan Matesih, Kabupaten Karanganyar, Provinsi Jawa Tengah,
+                            sekitar 35 km di sebelah timur kota Surakarta.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 26,27 km²</li>
+                            <li>Populasi total: 46.090
+                                jiwa</li>
+                            <li>Kepadatan: 1.647 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>23.026
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>23.064
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Ngargoyoso -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingNgargoyoso">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseNgargoyoso" aria-expanded="false" aria-controls="collapseNgargoyoso">
+                        Kecamatan Ngargoyoso
+                    </button>
+                </h2>
+                <div id="collapseNgargoyoso" class="accordion-collapse collapse" aria-labelledby="headingNgargoyoso">
+                    <div class="accordion-body">
+                        <img src="images/peta ngargoyoso.png" class="img-fluid" alt="Peta Kecamatan Ngargoyoso">
+                        <p style="text-align: justify;">
+                            Ngargoyoso adalah sebuah kecamatan di Kabupaten Karanganyar, Jawa
+                            Tengah. Ngargoyoso terdiri atas 9desa, yaitu:Puntukrejo, Berjo, Girimulyo,Segorogunung,
+                            Kemuning, Ngargoyoso, Jatirejo, Nglegok dan DukuhKecamatan Ngargoyoso sebelah barat
+                            berbatasan dengan Kecamatan Karangpandan, sebelah selatan berbatasan dengan Kecamatan
+                            Tawangmangu, sebelah timur berbatasan dengan Kabupaten Magetan (Gunung Lawu), sebelah utara
+                            berbatasan dengan Kecamatan Jenawi. Sebagian besar wilayah Kecamatan Ngargoyoso berada di
+                            lereng barat Gunung Lawu yang berudara dingin. Di Kecamatan Ngargoyoso terdapat objek wisata
+                            antara lain Candi Sukuh, air terjun Jumog, air terjun Parang Ijo, kebun teh "Bon Wolu", yang
+                            memasok teh ke pabrik teh Kemuning.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 65,34 km²</li>
+                            <li>Populasi total: 38.295
+                                jiwa</li>
+                            <li>Kepadatan: 506 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>19.111
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>19.184
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Mojogedang -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingMojogedang">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseMojogedang" aria-expanded="false" aria-controls="collapseMojogedang">
+                        Kecamatan Mojogedang
+                    </button>
+                </h2>
+                <div id="collapseMojogedang" class="accordion-collapse collapse" aria-labelledby="headingMojogedang">
+                    <div class="accordion-body">
+                        <img src="images/peta mojogedang.png" class="img-fluid" alt="Peta Kecamatan Mojogedang">
+                        <p style="text-align: justify;">
+                            Mojogedang adalah sebuah kecamatan di Kabupaten Karanganyar, Jawa
+                            Tengah. Nama kecamatan ini berasal dari kata mojo yang berarti cita-cita, dan pepadang yang
+                            berarti petunjuk, karena di tempat inilah Raden Mas Said (Mangkunagara I) mendapatkan
+                            petunjuk akan cita-citanya menjadi penguasa setelah mendengar kicauan burung derkuku di
+                            wilayah ini.
+
+                            Peninggalan Belanda yang masih aktif hingga sekarang adalah sebuah Gua Bosan dengan panjang
+                            sekitar setengah kilo meter, yang digunakan sebagai jalur irigasi untuk mengaliri
+                            persawahan. Ketika musim kemarau air yang melalui Gua Bosan surut sehingga dapat dilewati
+                            orang untuk menangkap ikan didalamnya. Lubang masuk Gua Bosan memiliki tinggi sekitar 2
+                            meter dan lebar 1,5 meter. Di bagian dalam, tinggi Gua Bosan ada yang mencapai 6 meter dan
+                            lebarnya ada yang menyempit dan melebar antara 1 sampai 2 meter.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 53,31 km²</li>
+                            <li>Populasi total: 72.665
+                                jiwa</li>
+                            <li>Kepadatan: 1.122 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>36.330
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>36.335
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Tasikmadu -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingTasikmadu">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTasikmadu" aria-expanded="false" aria-controls="collapseTasikmadu">
+                        Kecamatan Tasikmadu
+                    </button>
+                </h2>
+                <div id="collapseTasikmadu" class="accordion-collapse collapse" aria-labelledby="headingTasikmadu">
+                    <div class="accordion-body">
+                        <img src="images/peta tasikmadu.png" class="img-fluid" alt="Peta Kecamatan Tasikmadu">
+                        <p style="text-align: justify;">
+                            Tasikmadu adalah sebuah kecamatan di Kabupaten Karanganyar, Jawa
+                            Tengah. Di kecamatan ini terdapat Pabrik Gula Tasikmadu, sebuah pabrik gula yang didirikan
+                            pada 1871 oleh Mangkunegara IV. Di dalam kompleks pabrik gula terdapat tujuan wisata bernama
+                            Agrowisata Sondokoro.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 27,6 km²</li>
+                            <li>Populasi total: 66.022
+                                jiwa</li>
+                            <li>Kepadatan: 1.876 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>32.809
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>33.213
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecamatan Tawangmangu -->
+            <div class="accordion-item" style="margin-bottom: 20px;">
+                <h2 class="accordion-header" id="headingTawangmangu">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTawangmangu" aria-expanded="false" aria-controls="collapseTawangmangu">
+                        Kecamatan Tawangmangu
+                    </button>
+                </h2>
+                <div id="collapseTawangmangu" class="accordion-collapse collapse" aria-labelledby="headingTawangmangu">
+                    <div class="accordion-body">
+                        <img src="images/peta tawangmangu.png" class="img-fluid" alt="Peta Kecamatan Tawangmangu">
+                        <p style="text-align: justify;">
+                            Tawangmangu adalah sebuah kecamatan di Kabupaten Karanganyar, Jawa
+                            Tengah, Indonesia. Kecamatan ini ternama karena merupakan daerah wisata yang sangat dingin,
+                            suhu rata-rata di Tawangmangu adalah berkisar 9°-23°.
+
+                            Kota Tawangmangu dikenal sebagai objek wisata pegunungan di lereng barat Gunung Lawu yang
+                            bisa ditempuh dengan kendaraan darat selama sekitar satu jam dari Kota Surakarta (Solo).
+                            Sejak masa kolonial Belanda, tempat ini telah menjadi tempat berwisata. Salah satu objek
+                            tujuan wisata adalah Air Terjun Grojogan Sewu (ketinggian 81 meter). Di tempat tetirah ini,
+                            tersedia berbagai sarana pendukung wisata seperti kolam renang dan berbagai bentuk
+                            penginapan. Dari Tawangmangu, pendakian ke puncak Gunung Lawu (Pos Cemoro Kandang) dapat
+                            dimulai. Selain itu, terdapat jalan tembus yang menuju ke Telaga Sarangan di Magetan lewat
+                            Cemoro Sewu.
+
+                            Tawangmangu berada pada daerah pegunungan yang subur dan dikelilingi oleh hutan dan
+                            perbukitan. Namun, kota kecil ini telah terkenal hingga ke mancanegara karena kawasan ini
+                            merupakan objek pariwisata yang cocok untuk dijadikan pilihan saat berlibur maupun
+                            berwisata.
+                        </p>
+
+                        <h5>Data Umum:</h5>
+                        <ul>
+                            <li>Luas wilayah: 70,03 km²</li>
+                            <li>Populasi total: 49.021
+                                jiwa</li>
+                            <li>Kepadatan: 700 jiwa/km²</li>
+                        </ul>
+
+                        <h5>Data Populasi:</h5>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Laki-Laki</td>
+                                    <td>24.622
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Perempuan</td>
+                                    <td>24.399
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="plugin/leaflet-search-master/dist/leaflet-search.min.js"></script>
+    <script
+        src="plugin/Leaflet.defaultextent-master/Leaflet.defaultextent-master/dist/leaflet.defaultextent.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+
+    <script src="script.js"></script>
+    <script src="path/to/leaflet.js"></script>
+</body>
+
+</html>

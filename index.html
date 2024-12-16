@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Karanganyar Urban</title>
+
+    <!-- External CSS Links -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-measure/3.3.1/leaflet-measure.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="plugin/leaflet-search-master/dist/leaflet-search.min.css">
+    <link rel="stylesheet"
+        href="plugin/Leaflet.defaultextent-master/Leaflet.defaultextent-master/dist/leaflet.defaultextent.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-dark text-white">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-white">
+        <div class="container-fluid">
+
+            <a class="navbar-brand" href="#">K a r a n g <span> a n y a r</span>
+                <br>
+                <span class="urban-flow">Urban Flow</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+
+                    <!-- Link Home -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="index.html">
+                            <i class="fa-solid fa-house"></i> Home
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="maps.html">
+                            <i class="fa-solid fa-map-location-dot"></i> Maps
+                        </a>
+                    </li>
+
+                    <!-- Link Profil Kecamatan -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="profil.html">
+                            <i class="fa-solid fa-city"></i> Profil
+                        </a>
+                    </li>
+
+                    <!-- Link to data.html -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="data.html">
+                            <i class="fa-solid fa-database"></i> Data
+                        </a>
+                    </li>
+
+                    <!-- Link More Info -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="https://gishub.karanganyarkab.go.id/" target="_blank">
+                            <i class="fa-solid fa-layer-group"></i> More Info!</a>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+
+    <!-- Informasi Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-white">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">Information</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    This is some information about the urban flow in Karanganyar
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Map Section -->
+    <div id="map"></div>
+
+    <!-- Footer -->
+    <footer style="background-color: #2a2a2a; color: white; padding: 20px 0; text-align: center;">
+        <p>© 2024 Created with care by Aga.Mlna |
+            <a href="#" onclick="openFeedbackModal()" style="color: #ff8800; text-decoration: none;">Feedback</a>
+        </p>
+    </footer>
+
+    <!-- FeedBack -->
+    <div id="feedbackModal"
+        style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); transition: opacity 0.3s;">
+        <div
+            style="background-color: #2a2a2a; margin: 10% auto; padding: 20px; border-radius: 5px; width: 80%; max-width: 400px;">
+            <h2 style="color: #ff8800; margin-bottom: 20px;">Contact Us</h2>
+            <p style="margin-bottom: 30px;">Have questions or feedback? We'd love to hear from you!</p>
+            <form id="feedbackForm">
+                <div style="margin-bottom: 15px;">
+                    <input type="text" id="name" name="name" placeholder="Your Name" required
+                        style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 5px; background-color: #2a2a2a; color: white;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <input type="email" id="email" name="email" placeholder="Your Email" required
+                        style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 5px; background-color: #2a2a2a; color: white;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <textarea id="feedback" name="feedback" placeholder="Your Message" required
+                        style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 5px; background-color: #2a2a2a; color: white; height: 100px;"></textarea>
+                </div>
+                <button type="submit"
+                    style="padding: 10px 20px; background-color: #ff8800; color: white; border: none; border-radius: 5px; cursor: pointer;">Send
+                    Message</button>
+                <button type="button" onclick="closeFeedbackModal()"
+                    style="padding: 10px 20px; background-color: #444; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+            </form>
+            <div id="feedbackStatus" style="color: white; margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <!--Feature Modal -->
+    <div class="modal fade" id="featureModal" tabindex="-1" aria-labelledby="featureModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="featureModalTitle"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body" id="featureModalBody"></div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="featureModal" tabindex="-1" aria-labelledby="featureModalTitle" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="featureModalTitle">Informasi Fitur</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div id="featureModalBody"></div>
+                    <canvas id="featureChart" width="400" height="200"></canvas>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Landing Page -->
+    <div id="landing-page" class="landing-page">
+        <h1>Karanganyar Urban Map Portal</h1>
+        <p>Navigate the map to explore insights of urban life in Karanganyar!</p>
+        <button id="enter-map">Explore Map</button>
+
+        <section id="features" class="features">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-md-4 feature">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <h3>Interactive Maps</h3>
+                        <p>Zoom, pan, and explore detailed geospatial data of Karanganyar.</p>
+                    </div>
+
+                    <div class="col-md-4 feature">
+                        <i class="fas fa-chart-pie"></i>
+                        <h3>Population Data</h3>
+                        <p>Analyze population density across different areas.</p>
+                    </div>
+
+                    <div class="col-md-4 feature">
+                        <i class="fas fa-road"></i>
+                        <h3>Road Networks</h3>
+                        <p>View arterial, collector, and local roads with ease.</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="plugin/leaflet-search-master/dist/leaflet-search.min.js"></script>
+    <script
+        src="plugin/Leaflet.defaultextent-master/Leaflet.defaultextent-master/dist/leaflet.defaultextent.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
