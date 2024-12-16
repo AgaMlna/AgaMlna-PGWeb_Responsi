@@ -1,3 +1,4 @@
+/* ============ MAPS ============ */
 /* ============ Inisialisasi Peta ============ */
 // Inisialisasi peta dengan pusat Kecamatan Karanganyar
 if (map) {
@@ -33,22 +34,22 @@ darkMatterLayer.addTo(map);
 basemap.addTo(map);
 
 /* ============ GeoJSON Point Fasilitas Umum ============ */
-// GeoJSON Point fasum KRA
+// GeoJSON Point Fasilitas Umum
 var fasum_kra = L.geoJSON(null, {
     // Style
     pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
             icon: L.icon({
                 iconUrl: "icon/pin.png",
-                iconSize: [27, 27], // Ukuran ikon
-                iconAnchor: [24, 48], // Posisi ikon terhadap titik 
-                popupAnchor: [0, -48], // Posisi popup terhadap ikon
-                tooltipAnchor: [-16, -30], // Posisi tooltip terhadap ikon
+                iconSize: [27, 27],
+                iconAnchor: [24, 48],
+                popupAnchor: [0, -48],
+                tooltipAnchor: [-16, -30],
             }),
         });
     },
 
-    // onEachFeature
+    // Fungsi Modaal PopUp
     onEachFeature: function (feature, layer) {
         // Mengambil data nama objek dari kolom Desa
         var popup_content = "Jenis Bangunan: " + feature.properties.fclass + "<br>" +
@@ -57,7 +58,7 @@ var fasum_kra = L.geoJSON(null, {
         layer.on({
             click: function (e) {
                 // Menampilkan modal dengan informasi
-                $("#featureModalTitle").html("Informasi fasum KRA");
+                $("#featureModalTitle").html("Informasi Fasilitas Umum");
                 $("#featureModalBody").html(popup_content);
                 $("#featureModal").modal("show");
             },
@@ -74,7 +75,7 @@ var fasum_kra = L.geoJSON(null, {
 
 // Mengambil dan menambahkan data GeoJSON dari file fasum_kra.geojson
 $.getJSON("data/fasum_kra.geojson", function (data) {
-    fasum_kra.addData(data); // Menambahkan data GeoJSON ke dalam layer fasum_kra
+    fasum_kra.addData(data);
 });
 
 /* ============ GeoJSON Polyline Jalan ============ */
@@ -113,10 +114,10 @@ var jalan = L.geoJSON(null, {
 });
 
 $.getJSON("data/jalan_kra.geojson", function (data) {
-    jalan.addData(data); // Add GeoJSON data to the jalan layer
+    jalan.addData(data);
 });
 
-/* ============ Simbolisasi Berdasarkan Kategori ============ */
+// Simbolisasi Berdasarkan Kategori
 var symbologyCategorized = {
     "Jalan Arteri": { color: "#660000", weight: 3 },
     "Jalan Kolektor": { color: "#990000", weight: 2.5 },
@@ -212,7 +213,7 @@ var admin_kra = L.geoJSON(null, {
 
         layer.on({
             click: function () {
-                $("#featureModalTitle").html("Informasi Desa");
+                $("#featureModalTitle").html("Data Populasi");
                 $("#featureModalBody").html(popup_content);
                 $("#featureModal").modal("show");
             },
@@ -281,11 +282,10 @@ var populasi_kra = L.geoJSON(null, {
     style: function (feature) {
         var Populasi = feature.properties.Populasi;
         return {
-            color: "black", // Warna garis batas polygon
-            opacity: 1,
+            color: "black",
             weight: 1,
-            fillColor: getColor(Populasi), // Warna berdasarkan jumlah populasi
-            fillOpacity: 1.0, // Transparansi 
+            fillColor: getColor(Populasi),
+            fillOpacity: 1.0,
         };
     },
 
@@ -300,7 +300,7 @@ var populasi_kra = L.geoJSON(null, {
         layer.on({
             click: function (e) {
                 // Menampilkan popup dalam modal
-                $("#featureModalTitle").html("Informasi Desa");
+                $("#featureModalTitle").html("Data Populasi");
                 $("#featureModalBody").html(popup_content);
                 $("#featureModal").modal("show");
 
@@ -310,13 +310,13 @@ var populasi_kra = L.geoJSON(null, {
                     new Chart(ctx, {
                         type: "pie",
                         data: {
-                            labels: ["Laki-laki", "Perempuan"], // Label untuk data
+                            labels: ["Laki-laki", "Perempuan"],
                             datasets: [{
                                 data: [
-                                    feature.properties.Pria,  // Populasi Laki-laki
-                                    feature.properties.Wanita || 1, // Populasi Perempuan
+                                    feature.properties.Pria,
+                                    feature.properties.Wanita || 1,
                                 ],
-                                backgroundColor: ["#5e88c9", "#ff6f61"],  // Warna untuk tiap segmen
+                                backgroundColor: ["#5e88c9", "#ff6f61"],
                             }],
                         },
                         options: {
@@ -354,8 +354,8 @@ var populasi_kra = L.geoJSON(null, {
 
 // Mengambil dan menambahkan data GeoJSON dari data populasi
 $.getJSON("data/populasi_kra.geojson", function (data) {
-    populasi_kra.addData(data); // Menambahkan data GeoJSON ke dalam layer populasi_kra
-    map.addLayer(populasi_kra); // Menambahkan layer populasi_kra ke peta
+    populasi_kra.addData(data);
+    map.addLayer(populasi_kra);
 });
 
 // Menambahkan legenda gradasi warna ke peta
@@ -396,16 +396,14 @@ map.addLayer(populasi_kra);
 // Menambahkan kontrol untuk hanya menampilkan salah satu antara admin_kra dan populasi_kra
 map.on("overlayadd", function (e) {
     if (e.layer === admin_kra) {
-        // Jika admin_kra ditambahkan, sembunyikan populasi_kra
         if (map.hasLayer(populasi_kra)) {
-            populasi_kra.setOpacity(0); // Sembunyikan populasi_kra
+            populasi_kra.setOpacity(0);
         }
     }
 
     if (e.layer === populasi_kra) {
-        // Jika populasi_kra ditambahkan, sembunyikan admin_kra
         if (map.hasLayer(admin_kra)) {
-            admin_kra.setOpacity(0); // Sembunyikan admin_kra
+            admin_kra.setOpacity(0);
         }
     }
 });
@@ -413,12 +411,10 @@ map.on("overlayadd", function (e) {
 // Event ketika layer dihapus
 map.on("overlayremove", function (e) {
     if (e.layer === admin_kra) {
-        // Jika admin_kra dihapus, tampilkan populasi_kra
         populasi_kra.setOpacity(1);
     }
 
     if (e.layer === populasi_kra) {
-        // Jika populasi_kra dihapus, tampilkan admin_kra
         admin_kra.setOpacity(1);
     }
 });
@@ -427,17 +423,16 @@ L.control.layers(baseMaps, overlayMaps).addTo(map);
 
 /* ===== Menambahkan Kontrol Pencarian Lokasi ===== */
 var searchControl = new L.Control.Search({
-    layer: populasi_kra, // Layer yang akan dicari
-    propertyName: "NAMOBJ", // Nama atribut yang akan digunakan untuk pencarian
-    marker: false, // Nonaktifkan marker otomatis
+    layer: populasi_kra,
+    propertyName: "NAMOBJ",
+    marker: false,
     moveToLocation: function (latlng, title, map) {
-        map.setView(latlng, 15); // Zoom ke lokasi
+        map.setView(latlng, 15);
     },
 });
 
 // Event pencarian
 searchControl.on("search:locationfound", function (e) {
-    // Menyoroti fitur yang ditemukan
     e.layer.setStyle({ fillColor: "#03a3ff", color: "blue" });
     if (e.layer._popup) e.layer.openPopup();
 }).on("search:collapsed", function (e) {
@@ -546,11 +541,9 @@ function updateCombinedLegend() {
     }
 }
 
-// Mengupdate legenda saat layer overlay ditambahkan atau dihapus
 map.on('overlayadd', updateCombinedLegend);
 map.on('overlayremove', updateCombinedLegend);
 
-// Memanggil fungsi untuk pertama kali agar legenda sesuai dengan layer aktif awal
 updateCombinedLegend();
 
 // Memperbarui warna teks legenda berdasarkan peta dasar
@@ -564,26 +557,25 @@ function updateLegendTextColor(currentBaseMap) {
     }
 }
 
-// Memperbarui warna teks legenda saat peta dasar berubah
 map.on('baselayerchange', function (event) {
     updateLegendTextColor(event.name);
 });
 
 // Setel warna awal teks legenda berdasarkan peta dasar default
-updateLegendTextColor("darkMatterLayer"); // Ganti dengan nama peta dasar default
+updateLegendTextColor("darkMatterLayer");
 
-/* ===== Landing Page ===== */
+/* ===== HOME ===== */
 document.addEventListener("DOMContentLoaded", function () {
     const landingPage = document.getElementById("landing-page");
     const mapContainer = document.getElementById("map");
     const enterMapButton = document.getElementById("enter-map");
 
-    // Event Listener untuk tombol Enter Map
+    // Fungsi untuk tombol Enter Map
     enterMapButton.addEventListener("click", function () {
-        // Sembunyikan Landing Page
+        // Sembunyikan tampilan awal
         landingPage.style.display = "none";
 
-        // Tampilkan Map Container
+        // Tampilkan Maps
         mapContainer.classList.remove("hidden");
 
         // Inisialisasi peta
@@ -604,29 +596,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const enterMapButton = document.getElementById("enter-map");
 
     enterMapButton.addEventListener("click", function () {
-        // Sembunyikan Landing Page
         landingPage.style.display = "none";
-
-        // Tampilkan Spinner
         spinner.classList.remove("hidden");
-
-        // Tambahkan delay sebelum menampilkan peta
         setTimeout(function () {
-            // Sembunyikan Spinner
             spinner.classList.add("hidden");
-
-            // Tampilkan Map Container
             mapContainer.classList.remove("hidden");
 
-            // Inisialisasi Peta
             const map = L.map("map").setView([-7.6088822592081256, 110.98070839318441], 11);
 
-            // Tambahkan layer basemap
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             }).addTo(map);
 
-            // Tambahkan Plugin Leaflet.Measure
+            // Plugin Leaflet untuk Pengukuran
             const measureControl = new L.Control.Measure({
                 primaryLengthUnit: "meters",
                 secondaryLengthUnit: "kilometers",
@@ -638,7 +620,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Tambahkan kontrol pengukuran ke peta
             map.addControl(measureControl);
-        }, 2000); // Delay 2 detik
+        }, 2000);
     });
 });
 
@@ -650,7 +632,7 @@ map.addLayer(drawnItems);
 var drawControl = new L.Control.Draw({
     draw: {
         polyline: {
-            metric: true, // Pengukuran dalam meter
+            metric: true,
             shapeOptions: {
                 color: "blue",
                 weight: 3,
@@ -658,7 +640,7 @@ var drawControl = new L.Control.Draw({
         },
         polygon: {
             metric: true,
-            showArea: true, // Aktifkan pengukuran area
+            showArea: true,
             shapeOptions: {
                 color: "green",
                 weight: 2,
@@ -705,16 +687,16 @@ function openFeedbackModal() {
     const modal = document.getElementById('feedbackModal');
     modal.style.display = 'block';
     setTimeout(() => {
-        modal.style.opacity = '1'; // Efek transisi saat modal muncul
+        modal.style.opacity = '1';
     }, 10);
 }
 
 function closeFeedbackModal() {
     const modal = document.getElementById('feedbackModal');
-    modal.style.opacity = '0'; // Efek transisi saat modal menghilang
+    modal.style.opacity = '0';
     setTimeout(() => {
-        modal.style.display = 'none'; // Sembunyikan setelah transisi selesai
-    }, 300); // Waktu transisi
+        modal.style.display = 'none';
+    }, 300);
 }
 
 /* ===== Fungsi untuk Modal Feedback ===== */
@@ -722,16 +704,16 @@ function openFeedbackModal() {
     const modal = document.getElementById('feedbackModal');
     modal.style.display = 'block';
     setTimeout(() => {
-        modal.style.opacity = '1'; // Efek transisi saat modal muncul
+        modal.style.opacity = '1';
     }, 10);
 }
 
 function closeFeedbackModal() {
     const modal = document.getElementById('feedbackModal');
-    modal.style.opacity = '0'; // Efek transisi saat modal menghilang
+    modal.style.opacity = '0';
     setTimeout(() => {
-        modal.style.display = 'none'; // Sembunyikan setelah transisi selesai
-    }, 300); // Waktu transisi
+        modal.style.display = 'none';
+    }, 300);
 }
 
 /* ===== Kirim Feedback ke Google Apps Script ===== */
@@ -754,10 +736,9 @@ document.getElementById('feedbackForm').onsubmit = async function (event) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(formData),
-            mode: 'no-cors' // Menonaktifkan CORS (respons tidak bisa dibaca)
+            mode: 'no-cors'
         });
 
-        // Since mode is 'no-cors', you can't directly check the response here. Just show a success message.
         statusDiv.textContent = "Thank you for your feedback!";
         statusDiv.style.color = "green"; // Warna hijau untuk sukses
 
@@ -769,6 +750,7 @@ document.getElementById('feedbackForm').onsubmit = async function (event) {
 };
 
 
+/* ===== PROFIL ===== */
 /* ===== Search untuk Profil ===== */
 function searchProfile() {
     // Ambil nilai input pencarian
@@ -776,103 +758,99 @@ function searchProfile() {
 
     // Daftar id untuk setiap kecamatan dalam accordion
     var kecamatanList = [
-        "collapseColomadu",     // ID div untuk Kecamatan Colomadu
-        "collapseGondangrejo",  // ID div untuk Kecamatan Gondangrejo
-        "collapseJaten",        // ID div untuk Kecamatan Jaten
-        "collapseJatipuro",      // ID div untuk Kecamatan Jatipuro
-        "collapseJatiyoso",     // ID div untuk Kecamatan Jatiyoso
-        "collapseJenawi",       // ID div untuk Kecamatan Jenawi
-        "collapseJumantono",    // ID div untuk Kecamatan Jumantono
-        "collapseJumapolo",     // ID div untuk Kecamatan Jumapolo
-        "collapseKaranganyar",  // ID div untuk Kecamatan Karanganyar
-        "collapseKarangpandan", // ID div untuk Kecamatan Karangpandan
-        "collapseKebakkramat", // ID div untuk Kecamatan Kebakkramat
-        "collapseKerjo",        // ID div untuk Kecamatan Kerjo
-        "collapseMatesih",      // ID div untuk Kecamatan Matesih
-        "collapseMojogedang",   // ID div untuk Kecamatan Mojogedang
-        "collapseNgargoyoso",   // ID div untuk Kecamatan Ngargoyoso
-        "collapseTasikmadu",    // ID div untuk Kecamatan Tasikmadu
-        "collapseTawangmangu"   // ID div untuk Kecamatan Tawangmangu
+        "collapseColomadu",
+        "collapseGondangrejo",
+        "collapseJaten",
+        "collapseJatipuro",
+        "collapseJatiyoso",
+        "collapseJenawi",
+        "collapseJumantono",
+        "collapseJumapolo",
+        "collapseKaranganyar",
+        "collapseKarangpandan",
+        "collapseKebakkramat",
+        "collapseKerjo",
+        "collapseMatesih",
+        "collapseMojogedang",
+        "collapseNgargoyoso",
+        "collapseTasikmadu",
+        "collapseTawangmangu"
     ];
 
-    // Sembunyikan semua accordion collapse terlebih dahulu
-    kecamatanList.forEach(function(kecamatan) {
+    // Fungsi menyembunyikan semua accordion collapse terlebih dahulu
+    kecamatanList.forEach(function (kecamatan) {
         var accordionItem = document.getElementById(kecamatan);
-        accordionItem.classList.remove('show'); // Menyembunyikan konten accordion
+        accordionItem.classList.remove('show');
     });
 
-    // Periksa apakah input pencarian cocok dengan nama kecamatan
+    // Fungsi perika apakah input pencarian cocok dengan nama kecamatan
     if (input === "colomadu") {
         var element = document.getElementById("collapseColomadu");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Colomadu
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Colomadu
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "gondangrejo") {
         var element = document.getElementById("collapseGondangrejo");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Gondangrejo
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Gondangrejo
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "jaten") {
         var element = document.getElementById("collapseJaten");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Jaten
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Jaten
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "jatipuro") {
         var element = document.getElementById("collapseJatipuro");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Jatipuro
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Jatipuro
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "jatiyoso") {
         var element = document.getElementById("collapseJatiyoso");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Jatiyoso
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Jatiyoso
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "jenawi") {
         var element = document.getElementById("collapseJenawi");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Jenawi
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Jenawi
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "jumantono") {
         var element = document.getElementById("collapseJumantono");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Jumantono
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Jumantono
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "jumapolo") {
         var element = document.getElementById("collapseJumapolo");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Jumapolo
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Jumapolo
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "karanganyar") {
         var element = document.getElementById("collapseKaranganyar");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Karanganyar
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Karanganyar
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "karangpandan") {
         var element = document.getElementById("collapseKarangpandan");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Karangpandan
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Karangpandan
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "kebakkramat") {
         var element = document.getElementById("collapseKebakkramat");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Kebakkramat
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Kebakkramat
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "kerjo") {
         var element = document.getElementById("collapseKerjo");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Kerjo
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Kerjo
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "matesih") {
         var element = document.getElementById("collapseMatesih");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Matesih
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Matesih
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "mojogedang") {
         var element = document.getElementById("collapseMojogedang");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Mojogedang
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Mojogedang
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "ngargoyoso") {
         var element = document.getElementById("collapseNgargoyoso");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Ngargoyoso
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Ngargoyoso
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "tasikmadu") {
         var element = document.getElementById("collapseTasikmadu");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Tasikmadu
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Tasikmadu
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     } else if (input === "tawangmangu") {
         var element = document.getElementById("collapseTawangmangu");
-        element.classList.add('show'); // Tampilkan konten Kecamatan Tawangmangu
-        element.scrollIntoView({ behavior: 'smooth' }); // Scroll ke konten Kecamatan Tawangmangu
+        element.classList.add('show');
+        element.scrollIntoView({ behavior: 'smooth' });
     }
 }
-
-
-
-

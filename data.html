@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -63,7 +64,7 @@
                         </a>
                     </li>
 
-                    <!-- Link to data.html -->
+                    <!-- Link Data -->
                     <li class="nav-item">
                         <a class="nav-link text-white" href="data.html">
                             <i class="fa-solid fa-database"></i> Data
@@ -180,46 +181,33 @@
     </div>
 
     <style>
-        /* Make sure the title is at the top */
         h1.text-center {
             margin-top: 75px;
-            /* Ensure no extra margin at the top */
         }
 
-        /* Map containers styling */
         .map-container {
             border: 10px solid #ff8800;
-            /* Light border around maps */
             border-radius: 10px;
-            /* Rounded corners for maps */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            /* Subtle shadow effect */
             height: 200px;
-            /* Adjust height to 500px for the map container */
             margin-bottom: 1rem;
         }
 
-        /* Optional: Adjust text color for better contrast */
         h5.text-white {
             color: hsl(32, 100%, 50%);
             margin-top: -3px;
-            /* Ensures map titles are visible on dark backgrounds */
         }
 
-        /* Center text and add some space between content */
         .container {
             margin-top: 20px;
-            /* Space at the top */
         }
 
         .text-center {
             text-align: center;
         }
 
-        /* Adjust padding and margin for a clean look */
         p.text-center {
             padding: 0 10px;
-            /* Padding for the paragraph */
         }
 
         .leaflet-control-zoom {
@@ -243,11 +231,10 @@
 
         .btn-download:hover {
             background-color: #0056b3;
-            /* Warna latar saat hover */
         }
     </style>
 
-    <!-- Main Content -->
+    <!-- Isi Konten Utama -->
     <div class="container mt-4">
         <h1 class="text-center mb-4">Karanganyar Urban Map Portal</h1>
         <p class="text-center mb-5">
@@ -257,7 +244,7 @@
 
         </p>
 
-        <!-- Map Gallery Section -->
+        <!-- Daftar Data -->
         <div class="row text-center">
             <!-- Map 1: Fasilitas Umum -->
             <div class="col-lg-4 col-md-6 mb-4">
@@ -286,20 +273,20 @@
         <script>
             function createDownloadButton(map, data, buttonId, fileName) {
                 document.getElementById(buttonId).addEventListener('click', function () {
-                    const geojsonStr = JSON.stringify(data); // Konversi GeoJSON ke string
-                    const blob = new Blob([geojsonStr], { type: 'application/json' }); // Buat file Blob
+                    const geojsonStr = JSON.stringify(data); 
+                    const blob = new Blob([geojsonStr], { type: 'application/json' }); 
                     const url = URL.createObjectURL(blob);
 
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = fileName; // Nama file download
+                    a.download = fileName;
                     a.click();
 
-                    URL.revokeObjectURL(url); // Hapus URL setelah download
+                    URL.revokeObjectURL(url); 
                 });
             }
 
-            // Map 1: Fasilitas Umum (Fasum)
+            // Map 1: Fasilitas Umum 
             var map1 = L.map('map1').setView([-7.656880565490917, 110.9644352175589], 10);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { attribution: 'Map data © OpenStreetMap contributors' }).addTo(map1);
             fetch('data/fasum_kra.geojson')

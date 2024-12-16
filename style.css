@@ -1,3 +1,4 @@
+/* ============ HALAMAN UTAMA ============ */
 /* ============ Tampilan Web ============ */
 body {
     width: 100%;
@@ -48,8 +49,8 @@ header, nav {
     background-color: #2b2b2b; 
     padding: 10px 0; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-    margin-top: 0px; /* Memberikan jarak dengan navbar */
-    border-bottom: 1px solid #ffffff; /* Garis pembatas putih di bawah header */
+    margin-top: 0px; 
+    border-bottom: 1px solid #ffffff; 
     z-index: 100000;
 }
 
@@ -65,10 +66,10 @@ footer {
     text-align: center;
     padding: 5px 0;
     z-index: 10000;
-    border-top: 1px solid #ffffff; /* Garis pembatas putih di bawah header */
+    border-top: 1px solid #ffffff; 
 }
 
-/* ============ Maps ============ */
+/* ============ MAPS ============ */
 #map {
     width: 100%;
     height: calc(110vh - 56px);
@@ -97,7 +98,7 @@ footer {
     color: #fff;
 }
 
-/* Legend Styling */
+/* Tampilan Legenda */
 .info.legend {
     padding: 10px;
     border-radius: 5px;
@@ -118,7 +119,7 @@ footer {
     height: auto !important; 
 }
 
-/* ============ Modal ============ */
+/* ============ Tampilan Feedback ============ */
 #feedbackModal {
     display: none;
     position: fixed;
@@ -137,7 +138,7 @@ footer {
     color: white;
 }
 
-/* ============ Landing Page ============ */
+/* ============ HALAMAN UTAMA ============ */
 .landing-page {
     position: absolute;
     top: 10px;
@@ -218,8 +219,8 @@ footer {
     margin-top: 30px;
 }
 
-/* ============ Profil Kabupaten ============ */
-/* Profil Kabupaten Section */
+/* ============ PROFIL ============ */
+/* Profil Kabupaten */
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -271,7 +272,7 @@ ul li {
     margin-left: -100px;
 }
 
-/* Table Styling */
+/* Tampilan Tabel */
 .table {
     margin-top: 20px;
     border: 1px solid #ddd;
@@ -305,7 +306,7 @@ ul li {
     background-color: #444;
 }
 
-/* Responsiveness */
+/* Responsif */
 @media (max-width: 768px) {
     h1 {
         font-size: 2rem;
@@ -326,56 +327,55 @@ ul li {
 }
 
 .custom-divider {
-    border: 3px solid white; /* Warna dan ketebalan garis */
-    margin-top: 1px; /* Jarak atas */
-    margin-bottom: 1px; /* Jarak bawah */
+    border: 3px solid white; 
+    margin-top: 1px; 
+    margin-bottom: 1px; 
 }
 
 /* ============ Search ============ */
 .container.mt-4 {
-    margin-top: 200px; /* Tambahkan jarak dari atas (disesuaikan sesuai tinggi header) */
-    padding-top: 1px; /* Tambahan jarak dalam jika diperlukan */
-    margin-bottom: 1000px; /* Tambahkan jarak dari bawah */
-    padding-bottom: 1px; /* Tambahan jarak dalam bawah */
+    margin-top: 200px; 
+    padding-top: 1px;
+    margin-bottom: 1000px; 
+    padding-bottom: 1px; 
 }
 
-/* Ubah warna latar belakang dan teks pada input pencarian */
 #searchInput {
-    background-color: white; /* Warna latar belakang (Alice Blue) */
-    color: #333; /* Warna teks */
-    border: 1px solid white; /* Warna border */
-    padding: 10px; /* Jarak dalam */
-    border-radius: 5px; /* Membuat sudut melengkung */
+    background-color: white; 
+    color: #333; 
+    border: 1px solid white; 
+    padding: 10px; 
+    border-radius: 5px; 
 }
 
 /* Ubah warna pada input saat fokus */
 #searchInput:focus {
-    background-color: white; /* Warna saat fokus */
-    outline: none; /* Menghapus border default */
-    border: 1px solid #ff8800; /* Border fokus */
+    background-color: white; 
+    outline: none; 
+    border: 1px solid #ff8800; 
 }
 
 /* Ubah warna tombol */
 button.btn-primary {
-    background-color: #ff8800; /* Warna biru */
-    border: none; /* Menghapus border */
-    padding: 10px 20px; /* Jarak dalam */
-    border-radius: 5px; /* Membuat sudut melengkung */
-    color: black; /* Warna teks */
+    background-color: #ff8800; 
+    border: none; 
+    padding: 10px 20px; 
+    border-radius: 5px;
+    color: black; 
     font-style: bold;
 }
 
 /* Ubah warna tombol saat hover */
 button.btn-primary:hover {
-    background-color: #ff8800; /* Warna biru gelap saat hover */
-    cursor: pointer; /* Mengubah kursor menjadi tangan */
+    background-color: #ff8800; 
+    cursor: pointer; 
 }
 
 
 /* ============ Profil Kecamatan ============ */
 /* Profil Kecamatan Section */
 #profil {
-    margin-top: 1px; /* Tambahkan jarak antara konten dan header */
+    margin-top: 1px;
 }
 
 h2.text-center {
@@ -399,11 +399,11 @@ h2.text-center {
 }
 
 .accordion-button:focus {
-    box-shadow: none; /* Remove focus outline */
+    box-shadow: none;
 }
 
 .accordion-button:not(.collapsed) {
-    background-color: #555; /* Darker color when accordion is expanded */
+    background-color: #555;
     color: #ff8800;
 }
 
@@ -415,11 +415,11 @@ h2.text-center {
 
 .accordion-item {
     border-bottom: 1px solid #444;
-        margin-bottom: 20px; /* Memberikan jarak antar elemen */
+        margin-bottom: 20px; 
     }
 
 
-/* Image Styling */
+/* Tampilan Gambar */
 .accordion-body img {
     border-radius: 8px;
     max-width: 25%;
@@ -427,7 +427,7 @@ h2.text-center {
     margin-bottom: 20px;
 }
 
-/* List Styling */
+/* Tampilan List */
 .accordion-body ul {
     margin-left: 20px;
     font-size: 1rem;
@@ -443,7 +443,7 @@ h2.text-center {
     margin-top: 20px;
 }
 
-/* Table Styling */
+/* Tampilan Tabel */
 .table {
     width: 100%;
     margin-top: 20px;
@@ -474,7 +474,7 @@ h2.text-center {
     background-color: #444;
 }
 
-/* Responsive Design for Small Screens */
+/* Responsif */
 @media (max-width: 768px) {
     .container {
         margin-top: 80px; 
@@ -496,8 +496,5 @@ h2.text-center {
         padding: 8px;
     }
 }
-
-
-
 
 
